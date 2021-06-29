@@ -1,6 +1,7 @@
 # streamlit run app.py
 import streamlit as st
 
+import pandas as pd
 import numpy as np
 from amplify import *
 from amplify.client import FixstarsClient
@@ -16,23 +17,23 @@ client.parameters.timeout = 1000  # タイムアウト1i秒
 
 
 def main():
-    placeholderl = st.empty()
-    placeholderl.write("積み付け最適化")
+    st.title("QBox")
+    st.header("荷物の積み付けをアニーリングマシンで行います")
 
     h = st.slider(label='縦の長さ',
                   min_value=3,
                   max_value=20,
-                  value=3,
+                  value=7,
                   )
     w = st.slider(label='横の長さ',
                   min_value=3,
                   max_value=20,
-                  value=3,
+                  value=7,
                   )
     d = st.slider(label='高さ',
                   min_value=3,
                   max_value=20,
-                  value=3,
+                  value=7,
                   )
 
     box_1 = st.slider(label='Box 1の数',
@@ -52,6 +53,37 @@ def main():
                       max_value=10,
                       value=1,
                       )
+
+    boxes = pd.DataFrame(
+        [
+            [2, 3, 3],
+            [2, 5, 2],
+            [4, 4, 4]
+        ],
+        index=[
+            "Box 1",
+            "Box 2",
+            "Box 3"
+        ],
+        columns=[
+            "縦",
+            "横",
+            "高さ"
+        ]
+    )
+
+    st.table(boxes)
+
+    st.markdown(
+        """
+        ### 計算の順序
+        1. 立式
+        2. アニーリング（解の探索）
+        3. グラフの描画
+        
+        ----
+        """
+    )
 
     box_1_size = [
         2, 3, 3
@@ -78,9 +110,6 @@ def main():
         for _ in range(num[i]):
             packs.append(pack[i])
 
-    print(packs)
-    print(h, w, d)
-    print(type(h))
     placeholder = st.empty()
     with placeholder:
         st.write('実行中')
